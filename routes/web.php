@@ -82,3 +82,5 @@ Route::delete('tenders/{tender}', [TenderController::class, 'destroy'])->name('t
 use App\Http\Controllers\MarketingPlanController;
 
 Route::resource('marketing-plans', MarketingPlanController::class);
+Route::post('marketing-plans/store-multiple', [MarketingPlanController::class, 'storeMultiple'])
+    ->name('marketing-plans.store-multiple');

@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\MarketingPlan;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class MarketingPlanController extends Controller
@@ -56,9 +57,14 @@ class MarketingPlanController extends Controller
             'notes' => 'nullable|string',
         ]);
 
-        // Sanitize the date field to ensure correct format
+        // Ensure date is in correct format
         if (!empty($data['date'])) {
             $data['date'] = date('Y-m-d', strtotime($data['date']));
+        }
+
+        // Ensure user_id is valid
+        if (!empty($data['user_id']) && !User::find($data['user_id'])) {
+            $data['user_id'] = null;
         }
 
         MarketingPlan::create($data);
@@ -104,9 +110,14 @@ class MarketingPlanController extends Controller
             'notes' => 'nullable|string',
         ]);
 
-        // Sanitize the date field to ensure correct format
+        // Ensure date is in correct format
         if (!empty($data['date'])) {
             $data['date'] = date('Y-m-d', strtotime($data['date']));
+        }
+
+        // Ensure user_id is valid
+        if (!empty($data['user_id']) && !User::find($data['user_id'])) {
+            $data['user_id'] = null;
         }
 
         $marketingPlan->update($data);
@@ -122,5 +133,29 @@ class MarketingPlanController extends Controller
         $marketingPlan->delete();
 
         return redirect()->route('marketing-plans.index')->with('success', 'Marketing Plan deleted successfully.');
+    }
+
+    /**
+     * Store multiple marketing plans (from dynamic form) in storage.
+     */
+    public function storeMultiple(Request $request)
+    {
+        $plans = $request->input('plans', []);
+
+        foreach ($plans as $data) {
+            // Sanitize date
+            if (!empty($data['date'])) {
+                $data['date'] = date('Y-m-d', strtotime($data['date']));
+            }
+
+            // Ensure user_id is valid
+            if (!empty($data['user_id']) && !User::find($data['user_id'])) {
+                $data['user_id'] = null;
+            }
+
+            MarketingPlan::create($data);
+        }
+
+        return redirect()->route('marketing-plans.index')->with('success', 'All Marketing Plans saved successfully.');
     }
 }
