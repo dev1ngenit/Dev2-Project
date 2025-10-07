@@ -10,6 +10,8 @@
     <!--begin::Navbar-->
 <li class="nav-item">
     <a class="nav-link" href="{{ route('tenders.index') }}">Tenders</a>
+    <a href="{{ route('marketing-plans.index') }}" class="btn btn-secondary ms-2">Marketing plan</a>
+
 </li>
 
     <div class="card mb-5 mb-xl-10">

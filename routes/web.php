@@ -78,3 +78,7 @@ Route::post('tenders', [TenderController::class, 'store'])->name('tenders.store'
 Route::get('tenders/{tender}/edit', [TenderController::class, 'edit'])->name('tenders.edit');
 Route::put('tenders/{tender}', [TenderController::class, 'update'])->name('tenders.update');
 Route::delete('tenders/{tender}', [TenderController::class, 'destroy'])->name('tenders.destroy');
+
+use App\Http\Controllers\MarketingPlanController;
+
+Route::resource('marketing-plans', MarketingPlanController::class);
