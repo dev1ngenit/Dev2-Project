@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\MarketingDmar;
 use Illuminate\Http\Request;
+use Exception;
 
 class MarketingDmarController extends Controller
 {
@@ -23,28 +24,16 @@ class MarketingDmarController extends Controller
     // Store new Marketing DMAR
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'user_id' => 'nullable|exists:users,id',
-            'year' => 'nullable|digits:4',
-            'date' => 'nullable|date',
-            'month' => 'nullable|string|max:10',
-            'activity' => 'nullable|string|max:50',
-            'company' => 'nullable|string|max:100',
-            'service' => 'nullable|string|max:50',
-            'products' => 'nullable|string|max:100',
-            'tentative' => 'nullable|numeric',
-            'comments' => 'nullable|string',
-            'action_on_fail' => 'nullable|string|max:100',
-            'current_status' => 'nullable|string|max:50',
-            'client_type' => 'nullable|string|max:50',
-            'sector' => 'nullable|string',
-            'sub_sector' => 'nullable|string',
-            'area' => 'nullable|string',
-        ]);
+        try {
+            $data = $request->validate($this->validationRules());
+            MarketingDmar::create($data);
 
-        MarketingDmar::create($data);
-
-        return redirect()->route('marketing-dmars.index')->with('success', 'Marketing DMAR created successfully.');
+            return redirect()->route('marketing-dmars.index')
+                             ->with('success', 'Marketing DMAR created successfully.');
+        } catch (Exception $e) {
+            return redirect()->back()->withInput()
+                             ->with('error', 'Failed to create Marketing DMAR: ' . $e->getMessage());
+        }
     }
 
     // Show single Marketing DMAR
@@ -62,7 +51,35 @@ class MarketingDmarController extends Controller
     // Update a Marketing DMAR
     public function update(Request $request, MarketingDmar $marketing_dmar)
     {
-        $data = $request->validate([
+        try {
+            $data = $request->validate($this->validationRules());
+            $marketing_dmar->update($data);
+
+            return redirect()->route('marketing-dmars.index')
+                             ->with('success', 'Marketing DMAR updated successfully.');
+        } catch (Exception $e) {
+            return redirect()->back()->withInput()
+                             ->with('error', 'Failed to update Marketing DMAR: ' . $e->getMessage());
+        }
+    }
+
+    // Delete a Marketing DMAR
+    public function destroy(MarketingDmar $marketing_dmar)
+    {
+        try {
+            $marketing_dmar->delete();
+            return redirect()->route('marketing-dmars.index')
+                             ->with('success', 'Marketing DMAR deleted successfully.');
+        } catch (Exception $e) {
+            return redirect()->back()
+                             ->with('error', 'Failed to delete Marketing DMAR: ' . $e->getMessage());
+        }
+    }
+
+    // Validation rules (centralized for reuse)
+    private function validationRules()
+    {
+        return [
             'user_id' => 'nullable|exists:users,id',
             'year' => 'nullable|digits:4',
             'date' => 'nullable|date',
@@ -79,17 +96,12 @@ class MarketingDmarController extends Controller
             'sector' => 'nullable|string',
             'sub_sector' => 'nullable|string',
             'area' => 'nullable|string',
-        ]);
-
-        $marketing_dmar->update($data);
-
-        return redirect()->route('marketing-dmars.index')->with('success', 'Marketing DMAR updated successfully.');
-    }
-
-    // Delete a Marketing DMAR
-    public function destroy(MarketingDmar $marketing_dmar)
-    {
-        $marketing_dmar->delete();
-        return redirect()->route('marketing-dmars.index')->with('success', 'Marketing DMAR deleted successfully.');
+            'contact_name' => 'nullable|string|max:100',
+            'contact_number' => 'nullable|string|max:50',
+            'contact_email' => 'nullable|email|max:100',
+            'contact_address' => 'nullable|string',
+            'contact_website' => 'nullable|string|max:255',
+            'contact_social' => 'nullable|string',
+        ];
     }
 }
