@@ -11,6 +11,7 @@
 <li class="nav-item">
     <a class="nav-link" href="{{ route('tenders.index') }}">Tenders</a>
     <a href="{{ route('marketing-plans.index') }}" class="btn btn-secondary ms-2">Marketing plan</a>
+    <a href="/marketing-dmars" class="btn btn-primary">Enter Marketing DMAR System</a>
 
 </li>
 

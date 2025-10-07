@@ -84,3 +84,27 @@ use App\Http\Controllers\MarketingPlanController;
 Route::resource('marketing-plans', MarketingPlanController::class);
 Route::post('marketing-plans/store-multiple', [MarketingPlanController::class, 'storeMultiple'])
     ->name('marketing-plans.store-multiple');
+
+    use App\Http\Controllers\MarketingDmarController;
+
+// List all Marketing DMARs
+Route::get('/marketing-dmars', [MarketingDmarController::class, 'index'])->name('marketing-dmars.index');
+
+// Show form to create a new DMAR
+Route::get('/marketing-dmars/create', [MarketingDmarController::class, 'create'])->name('marketing-dmars.create');
+
+// Store new DMAR
+Route::post('/marketing-dmars', [MarketingDmarController::class, 'store'])->name('marketing-dmars.store');
+
+// Show single DMAR
+Route::get('/marketing-dmars/{marketing_dmar}', [MarketingDmarController::class, 'show'])->name('marketing-dmars.show');
+
+// Show form to edit DMAR
+Route::get('/marketing-dmars/{marketing_dmar}/edit', [MarketingDmarController::class, 'edit'])->name('marketing-dmars.edit');
+
+// Update DMAR
+Route::put('/marketing-dmars/{marketing_dmar}', [MarketingDmarController::class, 'update'])->name('marketing-dmars.update');
+Route::patch('/marketing-dmars/{marketing_dmar}', [MarketingDmarController::class, 'update']); // optional
+
+// Delete DMAR
+Route::delete('/marketing-dmars/{marketing_dmar}', [MarketingDmarController::class, 'destroy'])->name('marketing-dmars.destroy');
